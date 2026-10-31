@@ -1,0 +1,11 @@
+body { width: 360px; margin: 0; padding: 16px; font-family: Georgia, serif; background: #f3f6f1; color: #1f2a24; }
+h1 { font-size: 20px; margin: 0 0 12px; }
+textarea { width: 100%; height: 100px; box-sizing: border-box; padding: 8px; border: 1px solid #b9c7bb; border-radius: 6px; font: inherit; font-size: 14px; resize: vertical; }
+.modes { display: flex; gap: 6px; margin: 10px 0; }
+.modes button { flex: 1; padding: 8px 4px; border: 0; border-radius: 6px; background: #2f6b4f; color: #fff; font: inherit; font-size: 13px; cursor: pointer; }
+.modes button:hover { background: #245540; }
+.modes button:focus-visible, .link:focus-visible { outline: 2px solid #1f2a24; outline-offset: 2px; }
+.link { background: none; border: 0; color: #2f6b4f; text-decoration: underline; cursor: pointer; font: inherit; font-size: 13px; padding: 4px 0; }
+#output { white-space: pre-wrap; font-size: 14px; line-height: 1.5; min-height: 20px; margin-bottom: 8px; }
+details { font-size: 13px; }
+input { width: 100%; box-sizing: border-box; padding: 6px; margin-top: 6px; }

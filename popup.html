@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Student Buddy</h1>
+
+  <textarea id="input" placeholder="Paste text or a question here, or select text on a page and tap 'Use selection'."></textarea>
+  <button id="grab" class="link">Use selection from page</button>
+
+  <div class="modes">
+    <button data-mode="explain">Explain simply</button>
+    <button data-mode="summarize">Summarize</button>
+    <button data-mode="quiz">Quiz me</button>
+  </div>
+
+  <div id="output" aria-live="polite"></div>
+
+  <details>
+    <summary>API key</summary>
+    <input id="key" type="password" placeholder="Paste your Anthropic API key" />
+    <button id="saveKey" class="link">Save key</button>
+  </details>
+
+  <script src="popup.js"></script>
+</body>
+</html>
