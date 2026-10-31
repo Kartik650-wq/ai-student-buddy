@@ -2,13 +2,18 @@ const input = document.getElementById("input");
 const output = document.getElementById("output");
 const keyBox = document.getElementById("key");
 
+// Models to try in order. If one is busy, we move to the next.
+const MODELS = ["gemini-3.1-flash-lite", "gemini-3-flash", "gemini-3.8-flash"];
+
+const NO_MARKDOWN = " Do not use markdown or asterisks; write plain text only.";
+
 const PROMPTS = {
   explain:
-    "You are a friendly tutor. Explain the following in simple language a high-school student would understand. Use one short analogy. Do not use markdown or asterisks; write plain text only..",
+    "You are a friendly tutor. Explain the following in simple language a high-school student would understand. Use one short analogy." + NO_MARKDOWN,
   summarize:
-    "Summarize the following in 3-5 short bullet points. Keep only the key ideas.Do not use markdown or asterisks; write plain text only.",
+   "Summarize the following in 3-5 short bullet points. Keep only the key ideas." + NO_MARKDOWN,
   quiz:
-    "Write 3 multiple-choice questions to test understanding of the following. Put the answers at the end under 'Answers:'.Do not use markdown or asterisks; write plain text only."
+    "Write 3 multiple-choice questions to test understanding of the following. Put the answers at the end under 'Answers:'." + NO_MARKDOWN
 };
 
 chrome.storage.local.get("apiKey", ({ apiKey }) => {
@@ -34,6 +39,10 @@ document.querySelectorAll(".modes button").forEach((btn) => {
   btn.onclick = () => ask(btn.dataset.mode);
 });
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function ask(mode) {
   const text = input.value.trim();
   const { apiKey } = await chrome.storage.local.get("apiKey");
@@ -41,25 +50,43 @@ async function ask(mode) {
   if (!apiKey) return (output.textContent = "Add your API key below first.");
 
   output.textContent = "Thinking...";
-  try {
-    const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: PROMPTS[mode] }] },
-          contents: [{ parts: [{ text }] }]
-        })
+  let lastError = "";
+
+  for (const model of MODELS) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const res = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey
+            },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: PROMPTS[mode] }] },
+              contents: [{ parts: [{ text }] }]
+            })
+          }
+        );
+        const data = await res.json();
+
+        if (res.ok) {
+          output.textContent = data.candidates[0].content.parts[0].text;
+          return;
+        }
+
+        lastError = data.error?.message || "Request failed";
+        const busy = res.status === 503 || res.status === 429;
+        if (!busy) break; // not a busy error: move to the next model
+        output.textContent = "Server busy, retrying...";
+        await sleep(2000);
+      } catch (err) {
+        lastError = err.message;
+        break;
       }
-    );
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || "Request failed");
-    output.textContent = data.candidates[0].content.parts[0].text;
-  } catch (err) {
-    output.textContent = "Error: " + err.message;
+    }
   }
+
+  output.textContent = "Error: " + lastError;
 }
