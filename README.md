@@ -1,8 +1,18 @@
 # AI Student Buddy
-Chrome extension: explain, summarize, or quiz yourself on any text using an LLM API.
 
-## Run it
-1. Get an API key at console.anthropic.com
-2. Chrome > chrome://extensions > turn on Developer mode
-3. Load unpacked > pick this folder
-4. Click the extension, paste your key, and try it
+A Chrome extension that explains, summarizes, and quizzes you on any text using the Gemini API.
+
+## Features
+- Explain simply: plain-language explanation with an analogy
+- Summarize: 3-5 key bullet points
+- Quiz me: 3 multiple-choice questions with answers
+- Use selection from page: grabs highlighted text from any tab
+
+## Tech used
+HTML, CSS, JavaScript, Chrome Extension (Manifest V3), Gemini API
+
+## How to run
+1. Get a free API key at aistudio.google.com/apikey
+2. Open chrome://extensions and turn on Developer mode
+3. Click Load unpacked and select this folder
+4. Open the extension, paste your key, and click Save key
