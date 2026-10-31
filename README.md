@@ -16,3 +16,7 @@ HTML, CSS, JavaScript, Chrome Extension (Manifest V3), Gemini API
 2. Open chrome://extensions and turn on Developer mode
 3. Click Load unpacked and select this folder
 4. Open the extension, paste your key, and click Save key
+
+
+
+<img width="831" height="625" alt="Screenshot 2026-10-31 at 10 01 52 PM" src="https://github.com/user-attachments/assets/be9708fa-9bcc-430a-9d82-116e95352eda" />
